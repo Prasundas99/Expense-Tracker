@@ -1,17 +1,33 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, useEffect } from 'react';
 import AppReducer from './AppReducer';
 
 // Initial state
 const initialState = {
-  transaction: []
+  transaction: [
+    { id: 1, text: 'Flower', amounts: 20 },
+
+  ]
 }
+
 
 // Create context
 export const GlobalContext = createContext(initialState);
 
 // Provider component
 export const GlobalProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(AppReducer, initialState);
+  const [state, dispatch] = useReducer(AppReducer, initialState , //() => {
+    //const localdata = localStorage.getItem('Budget');
+    //return localdata ? JSON.parse(localdata) : [];
+  );
+
+  console.log(initialState.transaction)
+
+
+  //Local Storage
+  useEffect( () => {
+    localStorage.setItem('Budget', JSON.stringify(initialState));
+  },  )
+  
 
   // Actions
   function deleteTransaction(id) {
@@ -26,6 +42,8 @@ export const GlobalProvider = ({ children }) => {
       type: 'ADD_TRANSACTION',
       payload: transaction
     });
+
+    
   }
 
   return (<GlobalContext.Provider value={{
